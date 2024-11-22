@@ -6,7 +6,8 @@ import 'package:todo_app_provider/models/task_model.dart';
 class AddTodo extends StatelessWidget {
   AddTodo({super.key});
 
-  final controller = TextEditingController();
+  final titleController = TextEditingController();
+  final descriptionController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,7 @@ class AddTodo extends StatelessWidget {
       appBar: AppBar(
         title: const Text(
           "Nueva Tarea",
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold, color: Colors.black),
         ),
         backgroundColor: Colors.yellow[100],
       ),
@@ -24,36 +25,80 @@ class AddTodo extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
+            const SizedBox(height: 15),
             TextField(
-              controller: controller,
+              controller: titleController,
               autofocus: true,
-              decoration: const InputDecoration(
-                hintText: "Escribe tu próxima tarea",
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
+              decoration: InputDecoration(
+                hintText: "Título de la tarea",
+                filled: true,
+                fillColor: Colors.white,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.black),
                 ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.black),
                 ),
               ),
             ),
             const SizedBox(height: 15),
+            TextField(
+              controller: descriptionController,
+              decoration: InputDecoration(
+                hintText: "Descripción de la tarea",
+                filled: true,
+                fillColor: Colors.white,
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.black),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.black),
+                ),
+              ),
+              maxLines: 3,
+            ),
+            const SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                context.read<SaveTask>().addTask(
-                      Task(
-                        title: controller.text,
-                        isCompleted: false,
+                if (titleController.text.isNotEmpty &&
+                    descriptionController.text.isNotEmpty) {
+                  context.read<SaveTask>().addTask(
+                        Task(
+                          title: titleController.text,
+                          description: descriptionController.text,
+                          isCompleted: false,
+                        ),
+                      );
+                  titleController.clear();
+                  descriptionController.clear();
+                  Navigator.of(context).pop();
+                } else {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text(
+                        "Por favor, completa todos los campos.",
+                        textAlign: TextAlign.center,
                       ),
-                    );
-                controller.clear();
-                Navigator.of(context).pop();
+                      backgroundColor: Colors.redAccent,
+                    ),
+                  );
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
+                padding: const EdgeInsets.symmetric(vertical: 15),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(10),
+                ),
               ),
-              child:
-                  const Text('Agregar', style: TextStyle(color: Colors.white)),
+              child: const Text(
+                'Agregar',
+                style: TextStyle(color: Colors.white, fontSize: 16),
+              ),
             ),
           ],
         ),

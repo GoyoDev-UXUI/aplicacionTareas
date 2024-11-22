@@ -3,23 +3,27 @@ import 'package:todo_app_provider/models/task_model.dart';
 
 class SaveTask extends ChangeNotifier {
   final List<Task> _tasks = [
-    Task(title: "Aprender a programar", isCompleted: true),
+    Task(
+      title: "Aprender a programar",
+      description: "Comenzar con Flutter y Provider",
+      isCompleted: true,
+    ),
   ];
 
   List<Task> get tasks => _tasks;
 
   void addTask(Task task) {
-    tasks.add(task);
+    _tasks.add(task);
     notifyListeners();
   }
 
   void removeTask(Task task) {
-    tasks.remove(task);
+    _tasks.remove(task);
     notifyListeners();
   }
 
   void checkTask(int index) {
-    tasks[index].isDone();
+    _tasks[index].isDone();
     notifyListeners();
   }
 }
